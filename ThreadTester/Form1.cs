@@ -53,7 +53,8 @@ CREATE TABLE customers (
 
             var connection = new NpgsqlConnection(DbConnectionString);
 
-            connection.Open();//if this line is commented another error 
+            connection.Open();//if this line is commented then we will get connection is already open .
+            //I need to use single connection to use across all these queries to run async // single connection is to manage transaction.
 
             var name =connection.ExecuteScalar<string>(
                 $"SELECT datname FROM pg_database WHERE datistemplate = false and datname='{database}'");
