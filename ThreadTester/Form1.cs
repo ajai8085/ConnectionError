@@ -206,7 +206,59 @@ CREATE TABLE customers (
 
         }
 
+        private async void button2_Click(object sender, EventArgs e)
+        {
 
+            var dbname = "test_db";
+            CreateDB(dbname);
+            var customers = GetCustomers().ToList();
+
+
+            //var transaction = db.CreateTransaction();
+
+
+            var sdate = DateTime.Now.ToString("s");
+
+
+            var connection = new NpgsqlConnection(GetConnection(dbname));
+            //connection.Open();
+
+
+
+            var insertSql = @"INSERT INTO customers(
+             firstname, lasttname, deleted, createdutc, updatedat, createdatlocalnullable, 
+            createatlocal, version, amount, age) values( @firstname, @lasttname, @deleted, @createdutc, @updatedat, @createdatlocalnullable, 
+            @createatlocal, @version, @amount, @age) RETURNING ID";
+
+
+            //Emulate the task scenario by parallel foreach loop
+            var tasks = new List<Task<Customers>>();
+
+
+
+
+            foreach (var i in customers)
+            {
+
+                var command = new CommandDefinition(insertSql, i);
+                var id = await connection.ExecuteScalarAsync<int>(command).ConfigureAwait(false);
+
+
+                var selectcommand = new CommandDefinition("select * from customers where id=@id", new { id });
+                var task = connection.QueryFirstOrDefaultAsync<Customers>(selectcommand);
+
+
+
+                tasks.Add(task);
+                Console.WriteLine($"Managed Thread Id: {Thread.CurrentThread.ManagedThreadId}");
+
+            }
+
+
+            await Task.WhenAll(tasks).ConfigureAwait(false);
+            
+
+        }
     }
 
 
