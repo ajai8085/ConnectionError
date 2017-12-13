@@ -34,10 +34,14 @@ namespace ThreadTester
 
 
         private MssqlSvrTest _window;
+        private Form2 _window2;
         protected override void OnLoad(EventArgs e)
         {
             _window=new MssqlSvrTest();
             _window.Show(this);
+
+            _window2 = new Form2();
+            _window2.Show(this);
             base.OnLoad(e);
 
         }
@@ -48,6 +52,12 @@ namespace ThreadTester
             if (_window != null && _window.Visible)
             {
                 _window.Close();
+            }
+
+
+            if(_window2 != null && _window2.Visible)
+            {
+                _window2.Close();
             }
 
             base.OnClosing(e);
@@ -240,6 +250,8 @@ CREATE TABLE customers (
 
         private async void button3_Click(object sender, EventArgs e)
         {
+
+            
             await RunRealCase(false).ConfigureAwait(true );
         }
 
@@ -293,6 +305,7 @@ CREATE TABLE customers (
 
 
                 tasks.Add(task);
+                await task;
                 Console.WriteLine($"Managed Thread Id: {Thread.CurrentThread.ManagedThreadId}");
 
             }
