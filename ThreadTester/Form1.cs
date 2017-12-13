@@ -209,6 +209,20 @@ CREATE TABLE customers (
         private async void button2_Click(object sender, EventArgs e)
         {
 
+
+            await RunRealCase(false).ConfigureAwait(false);
+
+        }
+
+        private async void button3_Click(object sender, EventArgs e)
+        {
+            await RunRealCase(false).ConfigureAwait(true );
+        }
+
+
+        private async Task RunRealCase(bool openconn)
+        {
+
             var dbname = "test_db";
             CreateDB(dbname);
             var customers = GetCustomers().ToList();
@@ -221,7 +235,12 @@ CREATE TABLE customers (
 
 
             var connection = new NpgsqlConnection(GetConnection(dbname));
-            //connection.Open();
+
+            if (openconn)
+            {
+                connection.Open();    
+            }
+
 
 
 
@@ -237,7 +256,7 @@ CREATE TABLE customers (
 
 
 
-            foreach (var i in customers)
+            foreach(var i in customers)
             {
 
                 var command = new CommandDefinition(insertSql, i);
@@ -256,8 +275,6 @@ CREATE TABLE customers (
 
 
             await Task.WhenAll(tasks).ConfigureAwait(false);
-            
-
         }
     }
 
