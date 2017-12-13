@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -24,10 +25,32 @@ namespace ThreadTester
         {
             var connectionStringBuilder = new NpgsqlConnectionStringBuilder(DbConnectionString)
             {
-                Database = databaseName
+                Database = databaseName,
+                Pooling = true 
             };
 
             return connectionStringBuilder.ConnectionString;
+        }
+
+
+        private MssqlSvrTest _window;
+        protected override void OnLoad(EventArgs e)
+        {
+            _window=new MssqlSvrTest();
+            _window.Show(this);
+            base.OnLoad(e);
+
+        }
+
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            if (_window != null && _window.Visible)
+            {
+                _window.Close();
+            }
+
+            base.OnClosing(e);
         }
 
         private void CreateDB(string database= "customer_test")
@@ -90,6 +113,7 @@ CREATE TABLE customers (
 
         private async void button1_Click(object sender, EventArgs e)
         {
+            //https://stackoverflow.com/questions/41902019/can-i-use-parallel-for-with-sql-commands
 
             Console.WriteLine($"Managed Thread Id: {Thread.CurrentThread.ManagedThreadId}");
 
