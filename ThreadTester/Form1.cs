@@ -40,8 +40,8 @@ CREATE TABLE customers (
 	firstname                 varchar(100)  NOT NULL,
 	lasttname                 varchar(100)  NOT NULL,
 	deleted bool DEFAULT false NOT NULL,
-	CreatedUtc timestamp without time zone default (now() at time zone 'utc')   NOT NULL,
-	UpdatedAt  timestamp without time zone default (now() at time zone 'utc')   NOT NULL,
+	CreatedUtc timestamp without time zone default (now() at time zone 'utc')    NULL,
+	UpdatedAt  timestamp without time zone default (now() at time zone 'utc')    NULL,
 	CreatedAtLocalNullable   timestamp without time zone default (now() at time zone 'utc')   NULL,
 	CreateAtLocal    timestamp without time zone default (now() at time zone 'utc')   NOT NULL,
 	version                 varchar(100)  NULL,
@@ -129,7 +129,7 @@ CREATE TABLE customers (
 
             var insertSql = @"INSERT INTO customers(
              firstname, lasttname, deleted, createdutc, updatedat, createdatlocalnullable, 
-            createatlocal, version, amount, age) values( @firstname, @lasttname, @deleted, @createdutc, @updatedat, @createdatlocalnullable, 
+            createatlocal, version, amount, age) values( @firstname, @lastname, @deleted, @createdutc, @updatedat, @createdatlocalnullable, 
             @createatlocal, @version, @amount, @age) RETURNING ID";
 
 
@@ -246,7 +246,7 @@ CREATE TABLE customers (
 
             var insertSql = @"INSERT INTO customers(
              firstname, lasttname, deleted, createdutc, updatedat, createdatlocalnullable, 
-            createatlocal, version, amount, age) values( @firstname, @lasttname, @deleted, @createdutc, @updatedat, @createdatlocalnullable, 
+            createatlocal, version, amount, age) values( @firstname, @lastname, @deleted, @createdutc, @updatedat, @createdatlocalnullable, 
             @createatlocal, @version, @amount, @age) RETURNING ID";
 
 
